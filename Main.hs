@@ -28,11 +28,14 @@ todo = error "TODO"
 -- Implement the two functions with the given types.
 -- There is only one solution each which is a total and terminating.
 -- Follow the types!
+-- Reminder: function application associates to the left.
 riddleA :: ((a, b) -> c) -> (c -> d) -> (a, b) -> d
-riddleA = todo
+riddleA f g pair = g (f pair)
+
+-- f g x whould note work: the f whould swallow g before g can swallow
 
 riddleB :: a -> ((a -> b) -> c) -> (a -> a -> b) -> c
-riddleB = todo
+riddleB x f g = f (g x)
 
 -------------------------------------------------------------------------------
 -- 1. Recursion on Lists
@@ -40,7 +43,8 @@ riddleB = todo
 
 -- Implement the function `myLength`. It returns the length of a list:
 myLength :: [a] -> Int
-myLength = todo
+myLength [] = 0
+myLength (_:xs) = 1 + myLength xs
 
 myLengthSpec :: Spec
 myLengthSpec =
@@ -50,8 +54,11 @@ myLengthSpec =
     it "behaves like length" $ property $ \(l :: [Int]) -> myLength l == myLength l
 
 -- Implement the function myReverse. It reverses a list:
+-- Reminder: ":" means the left side must be one element, and the right side must be a list.
+-- Use ++ to append a lists
 myReverse :: [a] -> [a]
-myReverse = todo
+myReverse [] = []
+myReverse (x:xs) = myReverse xs ++ [x]
 
 myReverseSpec :: Spec
 myReverseSpec =
@@ -63,7 +70,10 @@ myReverseSpec =
 -- Implement the function drop. It drops the first n elements.
 -- It returns the list unchanged for negative n.
 myDrop :: Int -> [a] -> [a]
-myDrop = todo
+myDrop _ [] = []
+myDrop n xs
+    | n <= 0    = xs
+myDrop n (_:xs) = myDrop (n-1) xs
 
 myDropSpec :: Spec
 myDropSpec =
